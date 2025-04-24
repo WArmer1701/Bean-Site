@@ -1,0 +1,38 @@
+# File: .github/workflows/azure-static-web-apps.yml
+
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Triggers deployment on push to the 'main' branch
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Upload artifact and deploy to Azure Static Web Apps
+        uses: azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Needed for GitHub integrations
+          action: "upload"
+          app_location: "/"         # Root of your React app
+          output_location: "build"  # Build output folder
